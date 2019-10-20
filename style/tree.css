@@ -1,0 +1,114 @@
+*{
+	margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+
+}
+.wrapper {
+    padding: 2rem 0;
+}
+.category {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.image{
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    padding: 3rem 0;
+    background-position: center;
+}
+
+
+.image{
+background-image: linear-gradient(90deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, 0.2)), url("../images/wardrobe.jpg");
+background-size: cover;
+cursor: pointer;
+
+}
+
+.title{
+    font-size: 2rem;
+    color: white;
+    text-align: center;
+    border: 1px solid white;
+    width: 80%;
+    transition: 0.4s;
+
+}
+.title:hover{
+	background-color: white;
+	color: black;
+}
+
+
+
+.choices {
+    padding: 1rem;
+}
+.choices .progress-info {
+    text-align: center;
+}
+.choices .progress-info .go-back, .choices .progress-info .go-next{
+    font-size: 1.5rem;
+}
+.choices .progress-info .progress-text {
+    font-size: 2rem;
+    margin: 2rem;
+}
+.choices .bottom-part{
+    display: flex;
+    padding: 1.2rem;
+}
+.choices .bottom-part .left-part, .right-part{
+    flex-grow: 1;
+}
+.choices .bottom-part .left-part .item-image {
+    background-image: url("../images/wardrobe.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 25vw;
+    
+}
+.choices .bottom-part .right-part .main-container {
+
+    display: flex;
+    padding: 0.5rem;
+    height: 100%;
+}
+.choices .bottom-part .right-part .main-container .property-container{
+    flex-grow: 2;
+}
+.choices .bottom-part .right-part .main-container .go-back, .choices .bottom-part .right-part .main-container .go-next{
+    position: relative;
+    top: 45%;
+    font-size: 1.5rem;
+    margin: 0 10px;
+}
+.choices .bottom-part .right-part .main-container .property-container{
+    display: grid;
+    
+    overflow: hidden;
+}
+.choices .bottom-part .right-part .main-container .property-container .color-content{
+    padding: 1rem;
+}
+.choices .bottom-part .right-part .main-container .property-container .color-content .color-block {
+    margin: 1px;    
+    width: 23%; 
+    height: 6.5vw; 
+    display: inline-block;   
+    border-radius: 15px;        
+}
+/*utilities*/
+.d-n{
+    display: none;
+}
+
+.disabled{
+    color: #807878;
+}
