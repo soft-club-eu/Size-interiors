@@ -8,26 +8,26 @@ const items = {
     }
 }
 const options_html = {};
-let currentType;
+let currentItemType;
 
 function createNewItem() {
-    currentType = this.dataset.item;
-    const properties = [...Object.keys(items[currentType])];
-    currentItem.type = currentType;
+    currentItemType = this.dataset.item;
+    const properties = [...Object.keys(items[currentItemType])];
+    currentItem.type = currentItemType;
     currentItem.properties = properties;
     wrapper_div.innerHTML += choicesContainer_html;
     const goBack = document.querySelector('.progress-info .go-back');
     const goNext = document.querySelector('.progress-info .go-next');
     goBack.addEventListener('click', changeChoices);
     goNext.addEventListener('click', changeChoices);
-    nextChoice(0, currentType);
+    nextChoice(0, currentItemType);
 
 }
 
 function updateChoiceStep(currentIndex) {
     const progress_span = document.querySelector('span.progress-text');
     const currentItem = currentIndex + 1;
-    const length = Object.keys(items[currentType]).length;
+    const length = Object.keys(items[currentItemType]).length;
     progress_span.innerHTML = `${currentItem} of ${length}`;
     choiceArrowState(currentItem, length);
 }
@@ -48,10 +48,11 @@ function choiceArrowState(item, length) {
 
 function nextChoice(index, element) {
     //get the index for the next property
-    const property = [...Object.keys(items[currentType])][index];
+    const property = [...Object.keys(items[currentItemType])][index];
+    console.log(index, property);
     //set the previous property with value to the current item
     if (index > 0) {
-        const property = Object.keys(items[currentType])[index - 1];
+        const property = Object.keys(items[currentItemType])[index - 1];
         const value = element.dataset.value;
         setNewProperty(property, value);
     }
@@ -70,17 +71,22 @@ function changeChoices() {
     const mainContainer = document.querySelector('.main-container');
     const currentIndex = Number(document.querySelector('.progress-info .progress-text').innerHTML.split(" of ")[0]);
     const direction = this.classList[0].substring(3);
-    console.log(currentItem);
     direction === 'back' ?
         mainContainer.innerHTML = options_html[currentIndex - 2] :
         mainContainer.innerHTML = options_html[currentIndex];
-    console.log(currentItem);
+    console.log(this);
     updateChoiceStep(direction === 'back' ? currentIndex - 2 : currentIndex);
+    const blocks = document.querySelectorAll('.block');
+    if (blocks.length) {
+        console.log('Hey');
+        blocks.forEach(block => block.addEventListener('click', () => nextChoice(currentIndex - 1, block)));
+    }
 
 }
 
 function finishChoosing() {
 
 }
+
 
 items_buttons.forEach(button => button.addEventListener('click', createNewItem));
