@@ -1,7 +1,9 @@
 const items = {
     wardrobe: {
         color: ['red', 'yellow', 'purple', 'cyan', 'tomato', 'black', 'pink', 'maroon'],
-        dimension: ['AxB', 'BxC']
+        dimension: ['AxB', 'BxC'],
+        example: ['a', 'b'],
+        anotherExample: ['b', 'c']
     }
 };
 const currentItem = {};
@@ -12,41 +14,42 @@ Object.keys(items[currentItem.name]).forEach(property => addSection(property));
 
 function addSection(prop) {
     const section = document.createElement('section');
-    const progress = document.createElement('div');
-    const options = document.createElement('div');
     const text = document.createElement('p');
-    text.classList.add('choice-text');
     const dropDown = document.createElement('select');
-    const nextButton = document.createElement('button');
+    const saveButton = document.createElement('div');
     const userText = document.createElement('input');
+    section.classList.add('main-section');
+    text.classList.add('title');
     userText.classList.add('d-none');
+    dropDown.classList.add('dropdown');
     dropDown.addEventListener('change', () => showAndHideTextField(dropDown, userText));
-    nextButton.addEventListener('click', () => nextChoice(prop, dropDown.value, userText));
-    nextButton.innerHTML = 'Next';
-    text.innerHTML = `${itemNumber < 10 ? `0${itemNumber}` : itemNumber}. ${prop}`;
+    saveButton.addEventListener('click', () => nextChoice({prop, value: dropDown.value, userText, saveButton}));
+    saveButton.innerHTML = '<i class="fas fa-check-circle size"></i>';
+    saveButton.classList.add('save-button');
+    text.innerHTML = `${itemNumber < 10 ? `0${itemNumber}` : itemNumber}. ${prop[0].toUpperCase() + prop.slice(1)}`;
     Object.values(items[currentItem.name][prop]).forEach(val => {
         dropDown.options[dropDown.options.length] = new Option(val, val);
     });
     dropDown.options[dropDown.options.length] = new Option('Друго', 'other');
-    options.appendChild(text);
-    options.appendChild(dropDown);
-    options.appendChild(userText);
-    options.appendChild(nextButton);
-    section.appendChild(progress);
-    section.appendChild(options);
+    section.appendChild(text);
+    section.appendChild(dropDown);
+    section.appendChild(userText);
+    section.appendChild(saveButton);
     wrapper.appendChild(section);
     itemNumber++;
 }
 
 function addLastSection() {
     const section = document.createElement('section');
-    const label = document.createElement('label');
+    const text = document.createElement('p');
     const userText = document.createElement('textarea');
     const sendButton = document.createElement('button');
+    section.classList.add('main-section');
+    text.classList.add('title');
     sendButton.innerHTML = 'Завърши';
-    label.innerHTML = 'Допълнителна информация (не е задължително):';
+    text.innerHTML = 'Допълнителна информация (не е задължително):';
     
-    section.appendChild(label);
+    section.appendChild(text);
     section.appendChild(userText);
     section.appendChild(sendButton);
     wrapper.appendChild(section);
@@ -54,8 +57,22 @@ function addLastSection() {
 
 addLastSection();
 
-function nextChoice(prop, value, userText) {
+function nextChoice(data) {
+    const {saveButton, value, userText, prop} = data;
     value === "other" ? currentItem[prop] = userText.value : currentItem[prop] = value;
+    saveButton.classList.add('clicked-button');
+    setTimeout(() => saveButton.classList.remove('clicked-button'), 300);
+    increaseProgress();
+}
+
+function increaseProgress() {
+    const currentProgressBar = document.querySelector('.progress-bar .current-progress');
+    const currentHeight = currentProgressBar.clientHeight;
+    const newHeight = currentHeight + screen.availHeight / Object.keys(items[currentItem.name]).length;
+    console.log(newHeight);
+    //const newHeight = screen.availHeight
+    // const currentHeight = 100 / Object.keys(items[currentItem.name]).length;
+     currentProgressBar.style.height = newHeight + 'px';
 }
 
 function showAndHideTextField(dropDown, textField) {
