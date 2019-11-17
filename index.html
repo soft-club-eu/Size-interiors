@@ -5,16 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
+    <style>
+        .main-wrapper {
+            width: 80%;
+            margin: 0 auto;
+            background: black;
+            padding: 4rem;
+            display: flex;
+        }
+        .col {
+            background: green;
+            flex: 1;
+            transition: .5s;
+            height: 15%;
+        }
+        .tab { 
+            padding: 20px;
+        }
+        .option-content {
+            padding: 20px;
+            display: none;
+        }
+        .opened-col {
+            flex: 60%;
+            height: initial;
+        }
+        .opened-col .option-content {
+            display: block; 
+        }
+        .d-none {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="progress-bar">
-        <div class="current-progress"></div>
-    </div>
-    <div class="wrapper">
-        
+<div class="main-wrapper">
+       
     </div>
     <script src="scripts/main.js"></script>
 </body>
