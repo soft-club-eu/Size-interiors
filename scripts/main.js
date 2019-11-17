@@ -1,86 +1,80 @@
-const items_buttons = document.querySelectorAll('.category .category-item');
-const wrapper_div = document.querySelector('.wrapper');
-const currentItem = {};
 const items = {
     wardrobe: {
         color: ['red', 'yellow', 'purple', 'cyan', 'tomato', 'black', 'pink', 'maroon'],
-        dimension: ['AxB', 'BxC']
+        dimension: ['AxB', 'BxC'],
+        example: ['a', 'b'],
+        anotherExample: ['b', 'c']
     }
-}
-const options_html = {};
-let currentType;
+};
+const currentItem = {};
+const wrapper = document.querySelector('.wrapper');
+let itemNumber = 1;
+currentItem.name = 'wardrobe';
+Object.keys(items[currentItem.name]).forEach(property => addSection(property));
 
-function createNewItem() {
-    currentType = this.dataset.item;
-    const properties = [...Object.keys(items[currentType])];
-    currentItem.type = currentType;
-    currentItem.properties = properties;
-    wrapper_div.innerHTML += choicesContainer_html;
-    const goBack = document.querySelector('.progress-info .go-back');
-    const goNext = document.querySelector('.progress-info .go-next');
-    goBack.addEventListener('click', changeChoices);
-    goNext.addEventListener('click', changeChoices);
-    nextChoice(0, currentType);
-
-}
-
-function updateChoiceStep(currentIndex) {
-    const progress_span = document.querySelector('span.progress-text');
-    const currentItem = currentIndex + 1;
-    const length = Object.keys(items[currentType]).length;
-    progress_span.innerHTML = `${currentItem} of ${length}`;
-    choiceArrowState(currentItem, length);
-}
-
-function setNewProperty(property, value) {
-    currentItem[property] = value;
-}
-
-function choiceArrowState(item, length) {
-    const goBack = document.querySelector('.progress-info .go-back');
-    const goNext = document.querySelector('.progress-info .go-next');
-
-    item <= 1 ? goBack.classList.add('disabled') : goBack.classList.remove('disabled');
-    item >= length || Object.keys(options_html).length < length ?
-        goNext.classList.add('disabled') :
-        goNext.classList.remove('disabled');
+function addSection(prop) {
+    const section = document.createElement('section');
+    const text = document.createElement('p');
+    const dropDown = document.createElement('select');
+    const saveButton = document.createElement('div');
+    const userText = document.createElement('input');
+    section.classList.add('main-section');
+    text.classList.add('title');
+    userText.classList.add('d-none');
+    dropDown.classList.add('dropdown');
+    dropDown.addEventListener('change', () => showAndHideTextField(dropDown, userText));
+    saveButton.addEventListener('click', () => nextChoice({prop, value: dropDown.value, userText, saveButton}));
+    saveButton.innerHTML = '<i class="fas fa-check-circle size"></i>';
+    saveButton.classList.add('save-button');
+    text.innerHTML = `${itemNumber < 10 ? `0${itemNumber}` : itemNumber}. ${prop[0].toUpperCase() + prop.slice(1)}`;
+    Object.values(items[currentItem.name][prop]).forEach(val => {
+        dropDown.options[dropDown.options.length] = new Option(val, val);
+    });
+    dropDown.options[dropDown.options.length] = new Option('Друго', 'other');
+    section.appendChild(text);
+    section.appendChild(dropDown);
+    section.appendChild(userText);
+    section.appendChild(saveButton);
+    wrapper.appendChild(section);
+    itemNumber++;
 }
 
-function nextChoice(index, element) {
-    //get the index for the next property
-    const property = [...Object.keys(items[currentType])][index];
-    //set the previous property with value to the current item
-    if (index > 0) {
-        const property = Object.keys(items[currentType])[index - 1];
-        const value = element.dataset.value;
-        setNewProperty(property, value);
-    }
-    // check if all the properties are chosen and if so, call function to output the result
-    if (!property) {
-        finishChoosing();
-        return;
-    }
-    const propertyContainer = document.querySelector('.property-container');
-    propertyContainer.innerHTML = '';
-    addNewChoice(property, propertyContainer);
-    updateChoiceStep(index);
-}
-function changeChoices() {
-    if (this.classList.value.includes('disabled')) return;
-    const mainContainer = document.querySelector('.main-container');
-    const currentIndex = Number(document.querySelector('.progress-info .progress-text').innerHTML.split(" of ")[0]);
-    const direction = this.classList[0].substring(3);
-    console.log(currentItem);
-    direction === 'back' ?
-        mainContainer.innerHTML = options_html[currentIndex - 2] :
-        mainContainer.innerHTML = options_html[currentIndex];
-    console.log(currentItem);
-    updateChoiceStep(direction === 'back' ? currentIndex - 2 : currentIndex);
-
+function addLastSection() {
+    const section = document.createElement('section');
+    const text = document.createElement('p');
+    const userText = document.createElement('textarea');
+    const sendButton = document.createElement('button');
+    section.classList.add('main-section');
+    text.classList.add('title');
+    sendButton.innerHTML = 'Завърши';
+    text.innerHTML = 'Допълнителна информация (не е задължително):';
+    
+    section.appendChild(text);
+    section.appendChild(userText);
+    section.appendChild(sendButton);
+    wrapper.appendChild(section);
 }
 
-function finishChoosing() {
+addLastSection();
 
+function nextChoice(data) {
+    const {saveButton, value, userText, prop} = data;
+    value === "other" ? currentItem[prop] = userText.value : currentItem[prop] = value;
+    saveButton.classList.add('clicked-button');
+    setTimeout(() => saveButton.classList.remove('clicked-button'), 300);
+    increaseProgress();
 }
 
-items_buttons.forEach(button => button.addEventListener('click', createNewItem));
+function increaseProgress() {
+    const currentProgressBar = document.querySelector('.progress-bar .current-progress');
+    const currentHeight = currentProgressBar.clientHeight;
+    const newHeight = currentHeight + screen.availHeight / Object.keys(items[currentItem.name]).length;
+    console.log(newHeight);
+    //const newHeight = screen.availHeight
+    // const currentHeight = 100 / Object.keys(items[currentItem.name]).length;
+     currentProgressBar.style.height = newHeight + 'px';
+}
+
+function showAndHideTextField(dropDown, textField) {
+    dropDown.value === 'other' ? textField.classList.remove('d-none') : textField.classList.add('d-none');
+}

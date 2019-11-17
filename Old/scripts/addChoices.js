@@ -1,6 +1,6 @@
 function addNewChoice(property, propertyContainer) {
     let neededContents = 0;
-    const elements = items[currentType][property];
+    const elements = items[currentItemType][property];
     const goBack = document.querySelector('.main-container .go-back');
     const goNext = document.querySelector('.main-container .go-next'); 
 
@@ -35,20 +35,21 @@ function addNewChoice(property, propertyContainer) {
                 }
                 //create and add color block:
                 const elementBlock = document.createElement('div');
-                elementBlock.classList.add(`${property}-block`);
+                elementBlock.classList.add('block', `${property}-block`);
                 elementBlock.style.background = element;
                 elementBlock.dataset.value = element;
+                elementBlock.dataset.type = 'block';
                 currentRow.appendChild(elementBlock);
-                const propertyIndex = Object.keys(items[currentType]).indexOf('color');
-                elementBlock.addEventListener('click', () => nextChoice(propertyIndex + 1, elementBlock));
+                const propertyIndex = Object.keys(items[currentItemType]).indexOf('color');
+                elementBlock.addEventListener('click', () => nextChoice(propertyIndex + 1, elementBlock));                
         });
     }
 
     function addDropdown() {
         const currentContent = document.createElement('div');
+        const select = document.createElement('select');
         currentContent.classList.add(`${property}-content`);
         propertyContainer.appendChild(currentContent);
-        const select = document.createElement('select');
         select.classList.add(`${property}-select`);
         currentContent.appendChild(select);
         
@@ -93,7 +94,7 @@ function addNewChoice(property, propertyContainer) {
     }
     setupPropertyContainer();
 
-    const choiceIndex = Object.keys(items[currentType]).indexOf(property);
+    const choiceIndex = Object.keys(items[currentItemType]).indexOf(property);
     options_html[choiceIndex] = document.querySelector('.main-container').innerHTML;;
     
 }
